@@ -5,6 +5,8 @@ from components.chat import render_chat
 from components.comparador import render_comparador
 from components.roles import render_roles
 from components.analizador import render_analizador
+from components.pdf_chat import render_pdf_chat
+from components.generador_imagenes import render_generador_imagenes
 from utils.helpers import exportar_conversacion, nombre_archivo_chat
 
 st.set_page_config(page_title="AI Studio", page_icon="🧠", layout="wide")
@@ -29,6 +31,8 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "rol_messages" not in st.session_state:
     st.session_state.rol_messages = []
+if "pdf_messages" not in st.session_state:
+    st.session_state.pdf_messages = []
 
 # Barra lateral
 with st.sidebar:
@@ -40,6 +44,8 @@ with st.sidebar:
         "⚡ Comparar modelos",
         "🎭 Roles predefinidos",
         "📊 Analizador de texto",
+        "📄 Chat con PDF",
+        "🎨 Generador de imágenes",
     ])
 
     st.divider()
@@ -51,6 +57,7 @@ with st.sidebar:
 
     if st.button("🗑️ Limpiar chat", use_container_width=True):
         st.session_state.messages = []
+        st.session_state.pdf_messages = []
         st.rerun()
 
     if st.session_state.get("messages"):
@@ -70,3 +77,7 @@ elif modo == "🎭 Roles predefinidos":
     render_roles(modelo, temperatura)
 elif modo == "📊 Analizador de texto":
     render_analizador(modelo)
+elif modo == "📄 Chat con PDF":
+    render_pdf_chat(modelo, temperatura)
+elif modo == "🎨 Generador de imágenes":
+    render_generador_imagenes()
