@@ -7,6 +7,9 @@ from components.roles import render_roles
 from components.analizador import render_analizador
 from components.pdf_chat import render_pdf_chat
 from components.generador_imagenes import render_generador_imagenes
+from components.agente import render_agente
+from components.agente_langchain import render_agente_langchain
+from components.pagos import render_pagos
 from utils.helpers import exportar_conversacion, nombre_archivo_chat
 
 st.set_page_config(page_title="AI Studio", page_icon="🧠", layout="wide")
@@ -33,6 +36,12 @@ if "rol_messages" not in st.session_state:
     st.session_state.rol_messages = []
 if "pdf_messages" not in st.session_state:
     st.session_state.pdf_messages = []
+if "agente_messages" not in st.session_state:
+    st.session_state.agente_messages = []
+if "langchain_messages" not in st.session_state:
+    st.session_state.langchain_messages = []
+if "langchain_history" not in st.session_state:
+    st.session_state.langchain_history = []
 
 # Barra lateral
 with st.sidebar:
@@ -46,6 +55,9 @@ with st.sidebar:
         "📊 Analizador de texto",
         "📄 Chat con PDF",
         "🎨 Generador de imágenes",
+        "🤖 Agente con herramientas",
+        "🦜 Agente LangChain",
+        "💳 Planes y precios",
     ])
 
     st.divider()
@@ -58,6 +70,9 @@ with st.sidebar:
     if st.button("🗑️ Limpiar chat", use_container_width=True):
         st.session_state.messages = []
         st.session_state.pdf_messages = []
+        st.session_state.agente_messages = []
+        st.session_state.langchain_messages = []
+        st.session_state.langchain_history = []
         st.rerun()
 
     if st.session_state.get("messages"):
@@ -81,3 +96,9 @@ elif modo == "📄 Chat con PDF":
     render_pdf_chat(modelo, temperatura)
 elif modo == "🎨 Generador de imágenes":
     render_generador_imagenes()
+elif modo == "🤖 Agente con herramientas":
+    render_agente(modelo, temperatura)
+elif modo == "🦜 Agente LangChain":
+    render_agente_langchain()
+elif modo == "💳 Planes y precios":
+    render_pagos()

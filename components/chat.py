@@ -1,5 +1,5 @@
 import streamlit as st
-from services.ai_client import chat_completion
+from services.ai_client import get_client
 from config.settings import SYSTEM_PROMPT_DEFAULT
 
 def render_chat(modelo, temperatura):
@@ -21,15 +21,20 @@ def render_chat(modelo, temperatura):
             st.write(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Pensando..."):
-                reply = chat_completion(
-                    messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT_DEFAULT},
-                        *st.session_state.messages
-                    ],
-                    modelo=modelo,
-                    temperatura=temperatura,
-                )
-            st.write(reply)
+            client = get_client()
+            
+            # Streaming activado
+            stream = client.chat.completions.create(
+                model=modelo,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT_DEFAULT},
+                    *st.session_state.messages
+                ],
+                temperature=temperatura,
+                stream=True,
+            )
+            
+            # Mostrar respuesta palabra por palabra
+            reply = st.write_stream(stream)
 
         st.session_state.messages.append({"role": "assistant", "content": reply})
